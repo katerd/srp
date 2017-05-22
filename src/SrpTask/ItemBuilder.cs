@@ -59,5 +59,11 @@ namespace SrpTask
             _weight = weight;
             return this;
         }
+
+        public ItemBuilder WithName(string name)
+        {
+            _name = name;
+            return this;
+        }
     }
 }

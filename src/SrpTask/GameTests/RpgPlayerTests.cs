@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SrpTask.Game;
@@ -39,7 +40,7 @@ namespace SrpTask.GameTests
         {
             // Arrange
             Player.MaxHealth = 100;
-            Player.Health = 0;
+            Player.Health = 10;
 
             var healthPotion = 
                 ItemBuilder
@@ -60,7 +61,7 @@ namespace SrpTask.GameTests
         {
             // Arrange
             Player.MaxHealth = 50;
-            Player.Health = 0;
+            Player.Health = 10;
 
             var healthPotion =
                 ItemBuilder
@@ -108,6 +109,21 @@ namespace SrpTask.GameTests
 
             // Assert
             result.Should().BeFalse();
+        }
+
+        [Test]
+        public void PickUpItem_ThatDoesMoreThan500Healing_AnExtraGreenSwirlyEffectOccurs()
+        {
+            // Arrange
+            var xPotion = ItemBuilder.Build.WithHeal(501).AnItem();
+
+            Engine.Setup(x => x.PlaySpecialEffect("green_swirly")).Verifiable();
+
+            // Act
+            Player.PickUpItem(xPotion);
+
+            // Assert
+            Engine.VerifyAll();
         }
 
         [Test]
@@ -183,6 +199,26 @@ namespace SrpTask.GameTests
             // Assert
             Player.Health.Should().Be(200);
             Engine.VerifyAll();
+        }
+
+        [Test]
+        public void UseItem_StinkBomb_AllEnemiesNearThePlayerAreDamaged()
+        {
+            // Arrange
+            var enemy = new Mock<IEnemy>();
+
+            var item = ItemBuilder.Build.WithName("Stink Bomb").AnItem();
+            Engine.Setup(x => x.GetEnemiesNear(Player))
+                .Returns(new List<IEnemy>
+                {
+                    enemy.Object
+                });
+
+            // Act
+            Player.UseItem(item);
+
+            // Assert
+            enemy.Verify(x => x.TakeDamage(100));
         }
     }
 }

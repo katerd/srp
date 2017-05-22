@@ -29,6 +29,19 @@ namespace SrpTask.Game
             CarryingCapacity = MaximumCarryingCapacity;
         }
 
+        public void UseItem(Item item)
+        {
+            if (item.Name == "Stink Bomb")
+            {
+                var enemies = _gameEngine.GetEnemiesNear(this);
+
+                foreach (var enemy in enemies)
+                {
+                    enemy.TakeDamage(100);
+                }
+            }
+        }
+
         public bool PickUpItem(Item item)
         {
             var weight = CalculateInventoryWeight();
@@ -45,6 +58,11 @@ namespace SrpTask.Game
 
                 if (Health > MaxHealth)
                     Health = MaxHealth;
+
+                if (item.Heal > 500)
+                {
+                    _gameEngine.PlaySpecialEffect("green_swirly");
+                }
 
                 return true;
             }

@@ -60,6 +60,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game\Enemy.cs" />
     <Compile Include="Game\IGameEngine.cs" />
     <Compile Include="Game\Item.cs" />
     <Compile Include="ItemBuilder.cs" />
