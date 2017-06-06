@@ -19,18 +19,18 @@ We'll start by adding some more features to it to get it into a right mess, then
 
 ### Feature: Super rare items look more awesome
 
-* **As a** player
+* **As a** graphics designer
 * **I want** rare and unique items to look more awesome
-* **So that** I get a dopamine hit and keep buying more in-game currency
+* **So that** the player gets a dopamine hit and keep buying more in-game currency
 
 Add a new rule to ```PickUpItem``` that will show a ```blue_swirly``` effect if the ```item``` 
 is both ```rare``` and ```unique```.
 
 ### Feature: Un-encumbered players can parry more successfully
 
-* **As a** player
-* **I want** my damage taken to be reduced by 25% if I'm carrying under 50% of my capacity
-* **So that** I can win more fights because I bought premium items with real money
+* **As a** game designer
+* **I want** the players damage taken to be reduced by 25% if they're carrying under 50% of my capacity
+* **So that** they will win more fights because they bought premium items with real money
 
 Add a new rule that reduces all damage taken via ```TakeDamage``` by 25% if the player is carrying 
 less than half their ```CarryingCapacity```.
