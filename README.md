@@ -17,7 +17,7 @@ We'll start by adding some more features to it to get it into a right mess, then
 
 ## Making the situation worse...
 
-### Feature: uper rare items look more awesome
+### Feature: Super rare items look more awesome
 
 * **As a** player
 * **I want** rare and unique items to look more awesome
