@@ -30,7 +30,7 @@ is both ```rare``` and ```unique```.
 
 * **As a** game designer
 * **I want** the players damage taken to be reduced by 25% if they're carrying under 50% of my capacity
-* **So that** they will win more fights because they bought premium items with real money
+* **So that** they will win more fights because they're lighter and can dodge attacks more successfully.
 
 Add a new rule that reduces all damage taken via ```TakeDamage``` by 25% if the player is carrying 
 less than half their ```CarryingCapacity```.
