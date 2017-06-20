@@ -15,7 +15,14 @@ We'll start by adding some more features to it to get it into a right mess, then
 2. Build.
 3. Run the tests.
 
-## Making the situation worse...
+## Assessing the current solution
+
+Even though the public interface for the RpgPlayer looks nice and tidy, the nightmare exists behind the scenes.
+
+The RpgPlayer has far too much knowledge about what the items are capable of, though initially this may have seemed like a good place to
+put the logic as the items are *mostly* acting on the player.
+
+## Adding new features
 
 ### Feature: Super rare items look more awesome
 
@@ -34,14 +41,3 @@ is both ```rare``` and ```unique```.
 
 Add a new rule that reduces all damage taken via ```TakeDamage``` by 25% if the player is carrying 
 less than half their ```CarryingCapacity```.
-
-## ...What's gone wrong?
-
-Even though the public interface for the RpgPlayer looks nice and tidy, the nightmare exists behind the scenes.
-
-The RpgPlayer has far too much knowledge about what the items are capable of, though initially this may have seemed like a good place to
-put the logic as the items are *mostly* acting on the player.
-
-## How to fix it?
-
-*That would be telling.*
