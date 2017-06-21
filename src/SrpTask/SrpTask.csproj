@@ -63,6 +63,7 @@
     <Compile Include="Game\Enemy.cs" />
     <Compile Include="Game\IGameEngine.cs" />
     <Compile Include="Game\Item.cs" />
+    <Compile Include="Game\ItemEffects.cs" />
     <Compile Include="ItemBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Game\RpgPlayer.cs" />

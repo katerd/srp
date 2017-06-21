@@ -16,6 +16,7 @@ namespace SrpTask.Game
         public int Armour { get; private set; }
 
         public List<Item> Inventory;
+        private readonly ItemEffects _itemEffects;
 
         /// <summary>
         /// How much the player can carry in kilograms
@@ -25,6 +26,7 @@ namespace SrpTask.Game
         public RpgPlayer(IGameEngine gameEngine)
         {
             _gameEngine = gameEngine;
+            _itemEffects = new ItemEffects(gameEngine);
             Inventory = new List<Item>();
             CarryingCapacity = MaximumCarryingCapacity;
         }
@@ -52,29 +54,27 @@ namespace SrpTask.Game
                 return false;
 
             // Don't pick up items that give health, just consume them.
-            if (item.Heal > 0)
+            if (UseOnPickup(item))
             {
                 Health += item.Heal;
 
                 if (Health > MaxHealth)
                     Health = MaxHealth;
-
-                if (item.Heal > 500)
-                {
-                    _gameEngine.PlaySpecialEffect("green_swirly");
-                }
-
-                return true;
+            }
+            else
+            {
+                Inventory.Add(item);
+                CalculateStats();
             }
 
-            if (item.Rare)
-                _gameEngine.PlaySpecialEffect("cool_swirly_particles");
-
-            Inventory.Add(item);
-
-            CalculateStats();
+            _itemEffects.PlayForItem(item);
 
             return true;
+        }
+
+        private static bool UseOnPickup(Item item)
+        {
+            return item.Heal > 0;
         }
 
         private void CalculateStats()

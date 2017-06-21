@@ -220,5 +220,21 @@ namespace SrpTask.GameTests
             // Assert
             enemy.Verify(x => x.TakeDamage(100));
         }
+
+        [Test]
+        public void PickUpItem_ThatIsRareAndUnique_BlueSwirlyEffectOccurs()
+        {
+            // Arrange
+            var superRareItem =
+                ItemBuilder.Build.IsRare(true).IsUnique(true).AnItem();
+
+            Engine.Setup(x => x.PlaySpecialEffect("blue_swirly")).Verifiable();
+
+            // Act
+            Player.PickUpItem(superRareItem);
+
+            // Assert
+            Engine.VerifyAll();
+        }
     }
 }
