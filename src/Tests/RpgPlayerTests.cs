@@ -1,26 +1,25 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using FluentAssertions;
 using Moq;
-using NUnit.Framework;
+using SrpTask;
 using SrpTask.Game;
+using Xunit;
 
-namespace SrpTask.GameTests
+namespace Tests
 {
-    [TestFixture]
     public class RpgPlayerTests
     {
         public RpgPlayer Player { get; set; }
 
         public Mock<IGameEngine> Engine { get; set; }
 
-        [SetUp]
-        public void Setup()
+        public RpgPlayerTests()
         {
             Engine = new Mock<IGameEngine>();
             Player = new RpgPlayer(Engine.Object);
         }
 
-        [Test]
+        [Fact]
         public void PickUpItem_ThatCanBePickedUp_ItIsAddedToTheInventory()
         {
             // Arrange
@@ -35,7 +34,7 @@ namespace SrpTask.GameTests
             Player.Inventory.Should().Contain(item);
         }
 
-        [Test]
+        [Fact]
         public void PickUpItem_ThatGivesHealth_HealthIsIncreaseAndItemIsNotAddedToInventory()
         {
             // Arrange
@@ -56,7 +55,7 @@ namespace SrpTask.GameTests
             Player.Health.Should().Be(100);
         }
 
-        [Test]
+        [Fact]
         public void PickUpItem_ThatGivesHealth_HealthDoesNotExceedMaxHealth()
         {
             // Arrange
@@ -77,7 +76,7 @@ namespace SrpTask.GameTests
             Player.Health.Should().Be(50);
         }
 
-        [Test]
+        [Fact]
         public void PickUpItem_ThatIsRare_ASpecialEffectShouldBePlayed()
         {
             // Arrange
@@ -92,7 +91,7 @@ namespace SrpTask.GameTests
             Engine.VerifyAll();
         }
 
-        [Test]
+        [Fact]
         public void PickUpItem_ThatIsUnique_ItShouldNotBePickedUpIfThePlayerAlreadyHasIt()
         {
             // Arrange
@@ -111,7 +110,7 @@ namespace SrpTask.GameTests
             result.Should().BeFalse();
         }
 
-        [Test]
+        [Fact]
         public void PickUpItem_ThatDoesMoreThan500Healing_AnExtraGreenSwirlyEffectOccurs()
         {
             // Arrange
@@ -126,7 +125,7 @@ namespace SrpTask.GameTests
             Engine.VerifyAll();
         }
 
-        [Test]
+        [Fact]
         public void PickUpItem_ThatGivesArmour_ThePlayersArmourValueShouldBeIncreased()
         {
             // Arrange
@@ -141,7 +140,7 @@ namespace SrpTask.GameTests
             Player.Armour.Should().Be(100);
         }
 
-        [Test]
+        [Fact]
         public void PickUpItem_ThatIsTooHeavy_TheItemIsNotPickedUp()
         {
             // Arrange
@@ -154,7 +153,7 @@ namespace SrpTask.GameTests
             result.Should().BeFalse();
         }
 
-        [Test]
+        [Fact]
         public void TakeDamage_WithNoArmour_HealthIsReducedAndParticleEffectIsShown()
         {
             // Arrange
@@ -170,7 +169,7 @@ namespace SrpTask.GameTests
             
         }
 
-        [Test]
+        [Fact]
         public void TakeDamage_With50Armour_DamageIsReducedBy50AndParticleEffectIsShown()
         {
             // Arrange
@@ -185,7 +184,7 @@ namespace SrpTask.GameTests
             Player.Health.Should().Be(150);
         }
 
-        [Test]
+        [Fact]
         public void TakeDamage_WithMoreArmourThanDamage_NoDamageIsDealtAndParryEffectIsPlayed()
         {
             // Arrange
@@ -201,7 +200,7 @@ namespace SrpTask.GameTests
             Engine.VerifyAll();
         }
 
-        [Test]
+        [Fact]
         public void UseItem_StinkBomb_AllEnemiesNearThePlayerAreDamaged()
         {
             // Arrange
