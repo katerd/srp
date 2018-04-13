@@ -14,7 +14,12 @@ namespace Tests
 
         public static ItemBuilder Build => new ItemBuilder();
 
-        public Item AnItem()
+        public static implicit operator Item(ItemBuilder i)
+        {
+            return i.AnItem();
+        }
+
+        private Item AnItem()
         {
             return new Item(_id, _name, _heal, _armour, _weight, _unique, _rare);
         }

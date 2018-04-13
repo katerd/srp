@@ -14,7 +14,7 @@ namespace Tests
             // Arrange
             var engine = new Mock<IGameEngine>();
             var player = new RpgPlayer(engine.Object);
-            var item = ItemBuilder.Build.AnItem();
+            Item item = ItemBuilder.Build;
 
             player.Inventory.Should().BeEmpty();
 
@@ -36,11 +36,7 @@ namespace Tests
                 Health = 10
             };
 
-            var healthPotion = 
-                ItemBuilder
-                .Build
-                .WithHeal(100)
-                .AnItem();
+            Item healthPotion = ItemBuilder.Build.WithHeal(100);
 
             // Act
             player.PickUpItem(healthPotion);
@@ -61,11 +57,7 @@ namespace Tests
                 Health = 10
             };
 
-            var healthPotion =
-                ItemBuilder
-                .Build
-                .WithHeal(100)
-                .AnItem();
+            Item healthPotion = ItemBuilder.Build.WithHeal(100);
 
             // Act
             player.PickUpItem(healthPotion);
@@ -81,7 +73,7 @@ namespace Tests
             // Arrange
             var engine = new Mock<IGameEngine>();
             var player = new RpgPlayer(engine.Object);
-            var rareItem = ItemBuilder.Build.IsRare(true).AnItem();
+            Item rareItem = ItemBuilder.Build.IsRare(true);
 
             engine.Setup(x => x.PlaySpecialEffect("cool_swirly_particles")).Verifiable();
 
@@ -98,13 +90,9 @@ namespace Tests
             // Arrange
             var engine = new Mock<IGameEngine>();
             var player = new RpgPlayer(engine.Object);
-            player.PickUpItem(ItemBuilder.Build.WithId(100).AnItem());
+            player.PickUpItem(ItemBuilder.Build.WithId(100));
 
-            var uniqueItem = ItemBuilder
-                .Build
-                .WithId(100)
-                .IsUnique(true)
-                .AnItem();
+            Item uniqueItem = ItemBuilder.Build.WithId(100).IsUnique(true);
 
             // Act
             var result = player.PickUpItem(uniqueItem);
@@ -119,7 +107,7 @@ namespace Tests
             // Arrange
             var engine = new Mock<IGameEngine>();
             var player = new RpgPlayer(engine.Object);
-            var xPotion = ItemBuilder.Build.WithHeal(501).AnItem();
+            Item xPotion = ItemBuilder.Build.WithHeal(501);
 
             engine.Setup(x => x.PlaySpecialEffect("green_swirly")).Verifiable();
 
@@ -138,7 +126,7 @@ namespace Tests
             var player = new RpgPlayer(engine.Object);
             player.Armour.Should().Be(0);
 
-            var armour = ItemBuilder.Build.WithArmour(100).AnItem();
+            Item armour = ItemBuilder.Build.WithArmour(100);
 
             // Act
             player.PickUpItem(armour);
@@ -153,7 +141,7 @@ namespace Tests
             // Arrange
             var engine = new Mock<IGameEngine>();
             var player = new RpgPlayer(engine.Object);
-            var heavyItem = ItemBuilder.Build.WithWeight(player.CarryingCapacity + 1).AnItem();
+            Item heavyItem = ItemBuilder.Build.WithWeight(player.CarryingCapacity + 1);
 
             // Act
             var result = player.PickUpItem(heavyItem);
@@ -177,7 +165,6 @@ namespace Tests
             // Assert
             player.Health.Should().Be(100);
             engine.VerifyAll();
-            
         }
 
         [Fact]
@@ -187,7 +174,7 @@ namespace Tests
             var engine = new Mock<IGameEngine>();
             var player = new RpgPlayer(engine.Object);
             engine.Setup(x => x.PlaySpecialEffect("lots_of_gore")).Verifiable();
-            player.PickUpItem(ItemBuilder.Build.WithArmour(50).AnItem());
+            player.PickUpItem(ItemBuilder.Build.WithArmour(50));
             player.Health = 200;
 
             // Act
@@ -204,7 +191,7 @@ namespace Tests
             var engine = new Mock<IGameEngine>();
             var player = new RpgPlayer(engine.Object);
             engine.Setup(x => x.PlaySpecialEffect("parry")).Verifiable();
-            player.PickUpItem(ItemBuilder.Build.WithArmour(2000).AnItem());
+            player.PickUpItem(ItemBuilder.Build.WithArmour(2000));
             player.Health = 200;
 
             // Act
@@ -223,7 +210,7 @@ namespace Tests
             var player = new RpgPlayer(engine.Object);
             var enemy = new Mock<IEnemy>();
 
-            var item = ItemBuilder.Build.WithName("Stink Bomb").AnItem();
+            Item item = ItemBuilder.Build.WithName("Stink Bomb");
             engine.Setup(x => x.GetEnemiesNear(player))
                 .Returns(new List<IEnemy>
                 {
