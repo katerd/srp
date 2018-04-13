@@ -1,6 +1,6 @@
 ﻿using SrpTask.Game;
 
-namespace SrpTask
+namespace Tests
 {
     public class ItemBuilder
     {
