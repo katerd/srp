@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Moq;
 using SrpTask;
-using SrpTask.Game;
 using Xunit;
 
 namespace Tests

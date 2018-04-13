@@ -1,4 +1,4 @@
-﻿using SrpTask.Game;
+﻿using SrpTask;
 
 namespace Tests
 {
