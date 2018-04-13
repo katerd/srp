@@ -27,7 +27,7 @@ put the logic as the items are *mostly* acting on the player.
 ### Feature: Super rare items look more awesome
 
 * **As a** graphics designer
-* **I want** rare and unique items to look more awesome
+* **I want** items that are both rare and unique to look more awesome
 * **So that** the player gets a dopamine hit and keep buying more in-game currency
 
 Add a new rule to ```PickUpItem``` that will show a ```blue_swirly``` effect if the ```item``` 
