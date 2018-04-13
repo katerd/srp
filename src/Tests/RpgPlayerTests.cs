@@ -8,37 +8,33 @@ namespace Tests
 {
     public class RpgPlayerTests
     {
-        public RpgPlayer Player { get; set; }
-
-        public Mock<IGameEngine> Engine { get; set; }
-
-        public RpgPlayerTests()
-        {
-            Engine = new Mock<IGameEngine>();
-            Player = new RpgPlayer(Engine.Object);
-        }
-
         [Fact]
         public void PickUpItem_ThatCanBePickedUp_ItIsAddedToTheInventory()
         {
             // Arrange
+            var engine = new Mock<IGameEngine>();
+            var player = new RpgPlayer(engine.Object);
             var item = ItemBuilder.Build.AnItem();
 
-            Player.Inventory.Should().BeEmpty();
+            player.Inventory.Should().BeEmpty();
 
             // Act
-            Player.PickUpItem(item);
+            player.PickUpItem(item);
 
             // Assert
-            Player.Inventory.Should().Contain(item);
+            player.Inventory.Should().Contain(item);
         }
 
         [Fact]
         public void PickUpItem_ThatGivesHealth_HealthIsIncreaseAndItemIsNotAddedToInventory()
         {
             // Arrange
-            Player.MaxHealth = 100;
-            Player.Health = 10;
+            var engine = new Mock<IGameEngine>();
+            var player = new RpgPlayer(engine.Object)
+            {
+                MaxHealth = 100,
+                Health = 10
+            };
 
             var healthPotion = 
                 ItemBuilder
@@ -47,19 +43,23 @@ namespace Tests
                 .AnItem();
 
             // Act
-            Player.PickUpItem(healthPotion);
+            player.PickUpItem(healthPotion);
 
             // Assert
-            Player.Inventory.Should().BeEmpty();
-            Player.Health.Should().Be(100);
+            player.Inventory.Should().BeEmpty();
+            player.Health.Should().Be(100);
         }
 
         [Fact]
         public void PickUpItem_ThatGivesHealth_HealthDoesNotExceedMaxHealth()
         {
             // Arrange
-            Player.MaxHealth = 50;
-            Player.Health = 10;
+            var engine = new Mock<IGameEngine>();
+            var player = new RpgPlayer(engine.Object)
+            {
+                MaxHealth = 50,
+                Health = 10
+            };
 
             var healthPotion =
                 ItemBuilder
@@ -68,33 +68,37 @@ namespace Tests
                 .AnItem();
 
             // Act
-            Player.PickUpItem(healthPotion);
+            player.PickUpItem(healthPotion);
 
             // Assert
-            Player.Inventory.Should().BeEmpty();
-            Player.Health.Should().Be(50);
+            player.Inventory.Should().BeEmpty();
+            player.Health.Should().Be(50);
         }
 
         [Fact]
         public void PickUpItem_ThatIsRare_ASpecialEffectShouldBePlayed()
         {
             // Arrange
+            var engine = new Mock<IGameEngine>();
+            var player = new RpgPlayer(engine.Object);
             var rareItem = ItemBuilder.Build.IsRare(true).AnItem();
 
-            Engine.Setup(x => x.PlaySpecialEffect("cool_swirly_particles")).Verifiable();
+            engine.Setup(x => x.PlaySpecialEffect("cool_swirly_particles")).Verifiable();
 
             // Act
-            Player.PickUpItem(rareItem);
+            player.PickUpItem(rareItem);
 
             // Assert
-            Engine.VerifyAll();
+            engine.VerifyAll();
         }
 
         [Fact]
         public void PickUpItem_ThatIsUnique_ItShouldNotBePickedUpIfThePlayerAlreadyHasIt()
         {
             // Arrange
-            Player.PickUpItem(ItemBuilder.Build.WithId(100).AnItem());
+            var engine = new Mock<IGameEngine>();
+            var player = new RpgPlayer(engine.Object);
+            player.PickUpItem(ItemBuilder.Build.WithId(100).AnItem());
 
             var uniqueItem = ItemBuilder
                 .Build
@@ -103,7 +107,7 @@ namespace Tests
                 .AnItem();
 
             // Act
-            var result = Player.PickUpItem(uniqueItem);
+            var result = player.PickUpItem(uniqueItem);
 
             // Assert
             result.Should().BeFalse();
@@ -113,40 +117,46 @@ namespace Tests
         public void PickUpItem_ThatDoesMoreThan500Healing_AnExtraGreenSwirlyEffectOccurs()
         {
             // Arrange
+            var engine = new Mock<IGameEngine>();
+            var player = new RpgPlayer(engine.Object);
             var xPotion = ItemBuilder.Build.WithHeal(501).AnItem();
 
-            Engine.Setup(x => x.PlaySpecialEffect("green_swirly")).Verifiable();
+            engine.Setup(x => x.PlaySpecialEffect("green_swirly")).Verifiable();
 
             // Act
-            Player.PickUpItem(xPotion);
+            player.PickUpItem(xPotion);
 
             // Assert
-            Engine.VerifyAll();
+            engine.VerifyAll();
         }
 
         [Fact]
         public void PickUpItem_ThatGivesArmour_ThePlayersArmourValueShouldBeIncreased()
         {
             // Arrange
-            Player.Armour.Should().Be(0);
+            var engine = new Mock<IGameEngine>();
+            var player = new RpgPlayer(engine.Object);
+            player.Armour.Should().Be(0);
 
             var armour = ItemBuilder.Build.WithArmour(100).AnItem();
 
             // Act
-            Player.PickUpItem(armour);
+            player.PickUpItem(armour);
 
             // Assert
-            Player.Armour.Should().Be(100);
+            player.Armour.Should().Be(100);
         }
 
         [Fact]
         public void PickUpItem_ThatIsTooHeavy_TheItemIsNotPickedUp()
         {
             // Arrange
-            var heavyItem = ItemBuilder.Build.WithWeight(Player.CarryingCapacity + 1).AnItem();
+            var engine = new Mock<IGameEngine>();
+            var player = new RpgPlayer(engine.Object);
+            var heavyItem = ItemBuilder.Build.WithWeight(player.CarryingCapacity + 1).AnItem();
 
             // Act
-            var result = Player.PickUpItem(heavyItem);
+            var result = player.PickUpItem(heavyItem);
 
             // Assert
             result.Should().BeFalse();
@@ -156,15 +166,17 @@ namespace Tests
         public void TakeDamage_WithNoArmour_HealthIsReducedAndParticleEffectIsShown()
         {
             // Arrange
-            Engine.Setup(x => x.PlaySpecialEffect("lots_of_gore")).Verifiable();
-            Player.Health = 200;
+            var engine = new Mock<IGameEngine>();
+            var player = new RpgPlayer(engine.Object);
+            engine.Setup(x => x.PlaySpecialEffect("lots_of_gore")).Verifiable();
+            player.Health = 200;
 
             // Act
-            Player.TakeDamage(100);
+            player.TakeDamage(100);
 
             // Assert
-            Player.Health.Should().Be(100);
-            Engine.VerifyAll();
+            player.Health.Should().Be(100);
+            engine.VerifyAll();
             
         }
 
@@ -172,48 +184,54 @@ namespace Tests
         public void TakeDamage_With50Armour_DamageIsReducedBy50AndParticleEffectIsShown()
         {
             // Arrange
-            Engine.Setup(x => x.PlaySpecialEffect("lots_of_gore")).Verifiable();
-            Player.PickUpItem(ItemBuilder.Build.WithArmour(50).AnItem());
-            Player.Health = 200;
+            var engine = new Mock<IGameEngine>();
+            var player = new RpgPlayer(engine.Object);
+            engine.Setup(x => x.PlaySpecialEffect("lots_of_gore")).Verifiable();
+            player.PickUpItem(ItemBuilder.Build.WithArmour(50).AnItem());
+            player.Health = 200;
 
             // Act
-            Player.TakeDamage(100);
+            player.TakeDamage(100);
 
             // Assert
-            Player.Health.Should().Be(150);
+            player.Health.Should().Be(150);
         }
 
         [Fact]
         public void TakeDamage_WithMoreArmourThanDamage_NoDamageIsDealtAndParryEffectIsPlayed()
         {
             // Arrange
-            Engine.Setup(x => x.PlaySpecialEffect("parry")).Verifiable();
-            Player.PickUpItem(ItemBuilder.Build.WithArmour(2000).AnItem());
-            Player.Health = 200;
+            var engine = new Mock<IGameEngine>();
+            var player = new RpgPlayer(engine.Object);
+            engine.Setup(x => x.PlaySpecialEffect("parry")).Verifiable();
+            player.PickUpItem(ItemBuilder.Build.WithArmour(2000).AnItem());
+            player.Health = 200;
 
             // Act
-            Player.TakeDamage(100);
+            player.TakeDamage(100);
 
             // Assert
-            Player.Health.Should().Be(200);
-            Engine.VerifyAll();
+            player.Health.Should().Be(200);
+            engine.VerifyAll();
         }
 
         [Fact]
         public void UseItem_StinkBomb_AllEnemiesNearThePlayerAreDamaged()
         {
             // Arrange
+            var engine = new Mock<IGameEngine>();
+            var player = new RpgPlayer(engine.Object);
             var enemy = new Mock<IEnemy>();
 
             var item = ItemBuilder.Build.WithName("Stink Bomb").AnItem();
-            Engine.Setup(x => x.GetEnemiesNear(Player))
+            engine.Setup(x => x.GetEnemiesNear(player))
                 .Returns(new List<IEnemy>
                 {
                     enemy.Object
                 });
 
             // Act
-            Player.UseItem(item);
+            player.UseItem(item);
 
             // Assert
             enemy.Verify(x => x.TakeDamage(100));
