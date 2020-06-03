@@ -7,8 +7,6 @@
 Inside you will find the beginnings of a ground-breaking new RPG game. Unfortunately in the rush to get features completed the main
 RpgPlayer class is starting to turn into a hair-ball of responsibilities.
 
-We'll start by adding some more features to it to get it into a right mess, then we'll fix it up good.
-
 ## Getting started
 
 1. Clone.
